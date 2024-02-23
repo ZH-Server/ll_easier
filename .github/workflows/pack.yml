@@ -1,0 +1,43 @@
+name: Pack LLBDS
+
+on:
+  workflow_dispatch:
+    inputs:
+      LL_VER:
+        description: 'LeviLamina version'
+        required: true
+        default: '0.1.0'
+
+jobs:
+  build:
+    runs-on: 
+    steps:
+    # You might want to Checkout your repo first, but not mandatory
+    - name: Check Out
+      uses: actions/checkout@v3
+    - name: Prepare the environment
+      run: |
+        ls
+        mkdir llbds
+        curl https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip > ./lip.zip
+        unzip lip.zip
+        ls
+    - name: Install LeviLamina
+      run: |
+        cd llbds
+        ../lip install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER}}
+        ls
+    - name: Packing
+      run: |
+        cd ../
+        zip llbds.zip llbds/*
+    - name: Upload to Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: llbds.zip 
+        name: LeviLaminaBDS- ${{ github.event.inputs.LL_VER }}
+        tag_name: ${{ github.event.inputs.LL_VER }}
+        body: |
+          LeviLamina version: ${{ github.event.inputs.LL_VER }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
