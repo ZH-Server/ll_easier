@@ -19,8 +19,9 @@ jobs:
       run: |
         ls
         mkdir llbds
-        wget https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip
-        unzip lip-windows-amd64.zip
+        Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip -Outfile ./lip.zip
+        #wget https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip
+        unzip lip.zip
         ls
     - name: Install LeviLamina
       run: |
