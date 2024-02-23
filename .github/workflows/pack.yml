@@ -17,13 +17,20 @@ jobs:
       uses: actions/checkout@v3
     - name: Prepare the environment
       run: |
+        Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+        Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+        scoop bucket add main
+        scoop install main/zip 
+        scoop install main/wget
+        scoop install main/fastfetch
+        fastfetch
         ls
         rm README.md
         rm LICENSE
         ls
         mkdir llbds
-        Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip -Outfile ./lip.zip
-        #wget https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip
+        #Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip -Outfile ./lip.zip
+        wget https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip
         unzip lip.zip
         ls
     - name: Install LeviLamina
