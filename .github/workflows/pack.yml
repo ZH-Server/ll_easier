@@ -18,7 +18,8 @@ jobs:
     - name: Prepare the environment
       run: |
         ls
-        rm README.md LICENSE
+        rm README.md
+        rm LICENSE
         ls
         mkdir llbds
         Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip -Outfile ./lip.zip
@@ -28,7 +29,7 @@ jobs:
     - name: Install LeviLamina
       run: |
         cd llbds
-        ../lip install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER}}
+        ../lip.exe install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER}}
         ls
     - name: Packing
       run: |
