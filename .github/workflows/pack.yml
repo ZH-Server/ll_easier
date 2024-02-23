@@ -29,22 +29,17 @@ jobs:
         wget https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip
         unzip lip-windows-amd64.zip
         ls
-    - name: Install LeviLamina
+    - name: Install & Pack LeviLamina
       run: |
         mkdir llbds
         cd llbds
         ../lip.exe install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER}}
         ls
-    - name: Packing
-      run: |
-        cd ../
-        7z a -tzip llbds.zip llbds/*
-        ls
-        #zip llbds.zip llbds/*
+        7z a -tzip llbds.zip ./*
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
       with:
-        files: llbds.zip 
+        files: llbds/llbds.zip 
         name: LeviLaminaBDS- ${{ github.event.inputs.LL_VER }}
         tag_name: ${{ github.event.inputs.LL_VER }}
         body: |
