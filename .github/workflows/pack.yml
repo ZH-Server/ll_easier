@@ -28,13 +28,13 @@ jobs:
         rm README.md
         rm LICENSE
         ls
-        mkdir llbds
         #Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip -Outfile ./lip.zip
         wget https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip
-        unzip lip.zip
+        unzip lip-windows-amd64.zip
         ls
     - name: Install LeviLamina
       run: |
+        mkdir llbds
         cd llbds
         ../lip.exe install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER}}
         ls
