@@ -22,9 +22,6 @@ jobs:
         scoop bucket add main
         scoop install main/zip 
         scoop install main/wget
-        scoop install main/fastfetch
-        fastfetch
-        ls
         rm README.md
         rm LICENSE
         ls
@@ -41,7 +38,9 @@ jobs:
     - name: Packing
       run: |
         cd ../
-        zip llbds.zip llbds/*
+        7z a -tzip llbds.zip llbds/*
+        ls
+        #zip llbds.zip llbds/*
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
       with:
