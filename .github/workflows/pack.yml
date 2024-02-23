@@ -35,11 +35,12 @@ jobs:
         cd llbds
         ../lip.exe install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER}}
         ls
-        7z a -tzip llbds.zip ./*
+        cd ../
+        7z a -tzip llbds.zip llbds\
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
       with:
-        files: llbds/llbds.zip 
+        files: llbds.zip 
         name: LeviLaminaBDS- ${{ github.event.inputs.LL_VER }}
         tag_name: ${{ github.event.inputs.LL_VER }}
         body: |
