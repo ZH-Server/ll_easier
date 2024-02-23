@@ -10,8 +10,8 @@ on:
 
 jobs:
   build:
-    runs-on: 
-    steps:
+    runs-on: windows-latest
+    steps: 
     # You might want to Checkout your repo first, but not mandatory
     - name: Check Out
       uses: actions/checkout@v3
