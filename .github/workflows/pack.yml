@@ -18,6 +18,8 @@ jobs:
     - name: Prepare the environment
       run: |
         ls
+        rm README.md LICENSE
+        ls
         mkdir llbds
         Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip -Outfile ./lip.zip
         #wget https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip
