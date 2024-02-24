@@ -10,21 +10,23 @@ on:
 
 jobs:
   build:
+    if: github.event.repository.owner.id == github.event.sender.id
+    permissions:
+      contents: write
     runs-on: windows-latest
     steps: 
-    # You might want to Checkout your repo first, but not mandatory
     - name: Check Out
       uses: actions/checkout@v3
     - name: Prepare the environment
       run: |
         Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
         Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
-        scoop install main/zip 
-        scoop install main/wget
+        scoop update 
         rm README.md
         rm LICENSE
-        wget https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip
+        Invoke-RestMethod -Uri https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip
         unzip lip-windows-amd64.zip
+        rm lip-windows-amd64.zip
     - name: Install & Pack LeviLamina
       run: |
         mkdir llbds
