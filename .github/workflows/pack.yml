@@ -19,8 +19,8 @@ jobs:
       uses: actions/checkout@v3
     - name: Prepare the environment
       run: |
-        Invoke-RestMethod -Uri https://www.7-zip.org/a/7z2301-x64.msi
-        7z2031-x64.msi
+        Invoke-RestMethod -Uri https://www.7-zip.org/a/7z2301-x64.exe
+        7z2301-x64.exe
         rm README.md
         rm LICENSE
         Invoke-RestMethod -Uri https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip
