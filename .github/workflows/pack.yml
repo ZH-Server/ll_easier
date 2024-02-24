@@ -30,9 +30,10 @@ jobs:
         ../lip.exe install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER}}
         cd ../
     - name: Pack files
-      uses: edgarrc/action-7z@v1
-      with:
-        args: 7z a -tzip llbds_${{ github.event.inputs.LL_VER }}.zip llbds\
+      run: |
+        Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile ./7z.exe
+        .\7z.exe
+        7z a -tzip llbds_${{ github.event.inputs.LL_VER }}.zip llbds\
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
       with:
