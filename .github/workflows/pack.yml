@@ -21,8 +21,8 @@ jobs:
       run: |
         rm README.md
         rm LICENSE
-        Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip
-        unzip lip-windows-amd64.zip
+        Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip -Outfile ./lip.zip
+        unzip lip.zip
     - name: Install LeviLamina
       run: |
         mkdir llbds
