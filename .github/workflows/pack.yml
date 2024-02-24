@@ -21,7 +21,7 @@ jobs:
       run: |
         rm README.md
         rm LICENSE
-        Invoke-RestMethod -Uri https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip
+        Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip
         unzip lip-windows-amd64.zip
     - name: Install LeviLamina
       run: |
