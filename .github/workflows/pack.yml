@@ -17,26 +17,26 @@ jobs:
     steps: 
     - name: Check Out
       uses: actions/checkout@v3
-    - name: Prepare the environment
+    - name: Install Lip
       run: |
-        Invoke-RestMethod -Uri https://www.7-zip.org/a/7z2301-x64.exe
-        7z2301-x64.exe
         rm README.md
         rm LICENSE
         Invoke-RestMethod -Uri https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip
         unzip lip-windows-amd64.zip
-    - name: Install & Pack LeviLamina
+    - name: Install LeviLamina
       run: |
         mkdir llbds
         cd llbds
         ../lip.exe install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER}}
         cd ../
-        7z a -tzip llbds.zip llbds\
-        ls
+    - name: Pack files
+      uses: edgarrc/action-7z@v1
+      with:
+        args: 7z a -tzip llbds_${{ github.event.inputs.LL_VER }}.zip llbds\
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
       with:
-        files: llbds.zip 
+        files: llbds_${{ github.event.inputs.LL_VER }}.zip 
         name: LeviLaminaBDS - ${{ github.event.inputs.LL_VER }}
         tag_name: ${{ github.event.inputs.LL_VER }}
         body: |
