@@ -19,14 +19,12 @@ jobs:
       uses: actions/checkout@v3
     - name: Prepare the environment
       run: |
-        Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-        Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
-        scoop update 
+        Invoke-RestMethod -Uri https://www.7-zip.org/a/7z2301-x64.msi
+        7z2031-x64.msi
         rm README.md
         rm LICENSE
         Invoke-RestMethod -Uri https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip
         unzip lip-windows-amd64.zip
-        rm lip-windows-amd64.zip
     - name: Install & Pack LeviLamina
       run: |
         mkdir llbds
