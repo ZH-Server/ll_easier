@@ -36,14 +36,11 @@ jobs:
     - name: Install LSE
       if: github.event.inputs.LSE == 'true'
       run: |
-        ls
-        pwd
+        cd llbds
         ../lip.exe install -y github.com/LiteLDev/LegacyScriptEngine
+        cd ../
     - name: Pack files
       run: |
-        ls
-        pwd
-        cd ../
         Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile ./7z.exe
         .\7z.exe
         7z a -tzip llbds_${{ github.event.inputs.LL_VER }}.zip llbds\
