@@ -1,4 +1,4 @@
-# llbds_packer
+# LLBDS Packer
 
 一个用来打包指定版本的 带有 LeviLamina 的 Minecraft Bedrock Edition Server 的 GitAction 
 
@@ -16,14 +16,26 @@
 
 llbds_版本号.zip 解压后就是一个完整的带有 lip 环境的 LeviLamina + BDS 了
 
+## `Run workflow` 页中选项解释
+
+| 名称          | 解释                      | 默认值        |
+| ------------- | ------------------------- | ------------- |
+| `LL_VER`      | `LeviLamina` 所需安装版本 | 0.1.0         |
+| `LSE`         | 是否安装 `LSE`            | false         |
+
+-----
+
 ## 工作原理
 
-在 GitAction 的服务器上先安装 lip ，之后利用 GitAction 的服务器“网速快”的“特性”，用 lip 安装 LeviLamina ，安装完成后再将其文件压缩为 llbds_版本号.zip 扔在 Release 中
+在 GitAction 的服务器上先安装 lip ，之后利用 GitAction 的服务器“网速快”的“特性”，用 lip 安装 LeviLamina 之类，安装完成后再将其文件压缩为 llbds_版本号.zip 扔在 Release 中
 
 ## 有啥用?
 
-新版的 LeviLamina 安装手动安装不是很简单迅速，用 lip 自动安装网络又不太好导致安装过程出现问题，所以有了这个仓库
+新版的 LeviLamina 安装手动安装不是很简单，这对腐竹有一定技术要求；用 lip 自动安装网络又不太好导致安装过程出现各种奇怪问题，所以有了这个仓库以减轻开服难度
 
-## 有bug和建议?
+## 有Bug和建议?
 
 提在 Issues 里，或交 PR 
+
+什么？你说从 `Release` 中下载更慢？可以用一些镜像站嘛～
+
