@@ -7,6 +7,10 @@ on:
         description: 'LeviLamina version'
         required: true
         default: '0.1.0'
+      LSE:
+        description: 'LegacyScriptEngine include'
+        required: false
+        default: 'false'
 
 jobs:
   build:
@@ -28,9 +32,13 @@ jobs:
         mkdir llbds
         cd llbds
         ../lip.exe install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER}}
-        cd ../
+    - name: Install LSE
+      if: github.event.inputs.LSE == true
+      run: |
+        ../lip.exe install -y github.com/LiteLDev/LegacyScriptEngine
     - name: Pack files
       run: |
+        cd ../
         Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile ./7z.exe
         .\7z.exe
         7z a -tzip llbds_${{ github.event.inputs.LL_VER }}.zip llbds\
@@ -42,5 +50,6 @@ jobs:
         tag_name: ${{ github.event.inputs.LL_VER }}
         body: |
           LeviLamina version: ${{ github.event.inputs.LL_VER }}
+          Include LSE: ${{ github.event.inputs.LSE }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
