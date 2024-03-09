@@ -33,11 +33,13 @@ jobs:
         cd llbds
         ../lip.exe install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER}}
     - name: Install LSE
-      if: github.event.inputs.LSE == true
+      if: github.event.inputs.LSE == 'true'
       run: |
         ../lip.exe install -y github.com/LiteLDev/LegacyScriptEngine
     - name: Pack files
       run: |
+        ls
+        pwd
         cd ../
         Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile ./7z.exe
         .\7z.exe
