@@ -1,5 +1,7 @@
 # LLBDS Packer
 
+[![latest-levilamia](https://img.shields.io/github/v/tag/LiteLDev/LiteLoaderBDS?label=Version&style=for-the-badge "LeviLamina")](https://github.com/LiteLDev/LiteLoaderBDS/releases/latest)
+
 一个用来打包指定版本的 带有 LeviLamina 的 Minecraft Bedrock Edition Server 的 GitAction 
 
 ## 如何食用?
@@ -42,6 +44,5 @@ llbds_版本号.zip 解压后就是一个完整的带有 lip 环境的 LeviLamin
 
 [镜像站1](https://moeyy.cn/gh-proxy)
 
-[镜像站2]()
-
+[镜像站2](https://gh.lldc.top)
 
