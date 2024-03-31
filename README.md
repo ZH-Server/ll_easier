@@ -22,6 +22,7 @@ llbds_版本号.zip 解压后就是一个完整的带有 lip 环境的 LeviLamin
 | ------------- | ------------------------- | ------------- |
 | `LL_VER`      | `LeviLamina` 所需安装版本 | 0.1.0         |
 | `LSE`         | 是否安装 `LSE`            | false         |
+| `RUNTIME`     | 是否包括`LeviLamina`所需的C++运行时| false|
 
 -----
 
@@ -38,4 +39,9 @@ llbds_版本号.zip 解压后就是一个完整的带有 lip 环境的 LeviLamin
 提在 Issues 里，或交 PR 
 
 什么？你说从 `Release` 中下载更慢？可以用一些镜像站嘛～
+
+[镜像站1](https://moeyy.cn/gh-proxy)
+
+[镜像站2]()
+
 
