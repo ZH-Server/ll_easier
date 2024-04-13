@@ -15,6 +15,10 @@ on:
         description: 'Runtime for LeviLamina'
         required: false
         default: 'false'
+      SCRIPTS:
+        description: 'User scripts'
+        required: false
+        default: 'false'
 
 jobs:
   build:
@@ -48,6 +52,12 @@ jobs:
       run: |
         cd llbds
         Invoke-WebRequest -Uri https://aka.ms/vs/17/release/vc_redist.x64.exe -Outfile ./runtime_for_levilamina.exe
+        cd ../
+    - name: Run user scripts
+      if: github.event.inputs.SCRIPTS == 'true'
+      run: |
+        cd llbds
+        ../user_scripts.bat
         cd ../
     - name: Pack files
       run: |

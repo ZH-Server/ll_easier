@@ -12,7 +12,7 @@
 
 点击右侧的 `Pack LLBDS`
 
-打开 `Run workflow` 填入你需要的 LeviLamina 版本号(在 LeviLamina 的 `Release` 页中查看可用版本)
+打开 `Run workflow` 填入你需要的 LeviLamina 版本号(本 README 上的蓝色小标签中的数字)，以及按照个人需求填写其他内容
 
 点击 `Run workflow` 后，一杯白开水的功夫你就可以去 `Release` 里找到期待中的 `llbds_版本号.zip` 啦！
 
@@ -25,6 +25,7 @@ llbds_版本号.zip 解压后就是一个完整的带有 lip 环境的 LeviLamin
 | `LL_VER`      | `LeviLamina` 所需安装版本 | 0.1.0         |
 | `LSE`         | 是否安装 `LSE`            | false         |
 | `RUNTIME`     | 是否包括`LeviLamina`所需的C++运行时| false|
+| `SCRIPTS`     | 是否运行仓库目录下的 `user_scripts.bat`|false|
 
 -----
 
