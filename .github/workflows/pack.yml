@@ -35,6 +35,7 @@ jobs:
         rm LICENSE
         Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip -Outfile ./lip.zip
         unzip lip.zip
+        set PATH=%PATH%;./
     - name: Install LeviLamina
       run: |
         mkdir llbds
