@@ -1,1 +1,1 @@
-lip install github.com/GroupMountain/GMLIB@0.12.3
+../lip install github.com/GroupMountain/GMLIB@0.12.3
