@@ -1,4 +1,4 @@
-name: Pack LLBDS
+name: Release LeviLaminaBDS
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
       LSE:
         description: 'LegacyScriptEngine include'
         required: false
-        default: 'false'
+        default: 'true'
       RUNTIME:
         description: 'Runtime for LeviLamina'
         required: false
