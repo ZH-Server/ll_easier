@@ -1,4 +1,4 @@
-name: Release LeviLaminaBDS
+name: Release LeviLaminaBDS[Auto]
 
 on:
   workflow_dispatch:
@@ -26,6 +26,7 @@ jobs:
         id: get-latest-version
         uses: actions/github-script@v5
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const { data: releases } = await github.repos.listReleases({
               owner: 'LiteLDev',
@@ -54,7 +55,7 @@ jobs:
         run: |
           mkdir llbds
           cd llbds
-          ../lip.exe install -y github.com/LiteLDev/LeviLamina@${{ needs.get-latest-version.outputs.latest_version }}
+          ../lip.exe install -y https://github.com/LiteLDev/LeviLamina@${{ needs.get-latest-version.outputs.latest_version }}
           ls
       - name: Install LSE
         if: github.event.inputs.LSE == 'true'
