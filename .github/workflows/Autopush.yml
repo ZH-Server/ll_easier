@@ -39,6 +39,12 @@ jobs:
         cd llbds
         ../lip.exe install -y github.com/LiteLDev/LegacyScriptEngine
         cd ../
+    - name: Get BDS core version and delete file
+      id: get_bds_core_version
+      run: |
+        $file = Get-ChildItem -Path .\llbds\.cache\bdsdown\ -File | Select-Object -First 1
+        echo "::set-output name=bds_core_version::$(echo $file.Name)"
+        Remove-Item -Path $file.FullName
     - name: Pack files
       run: |
         Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile ./7z.exe
@@ -52,6 +58,7 @@ jobs:
         tag_name: ${{ steps.format_version.outputs.version  }}
         body: |
           LeviLamina version: ${{ steps.format_version.outputs.version  }}
+          Support BDS core: ${{ steps.get_bds_core_version.outputs.bds_core_version }}
           Include LSE: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
