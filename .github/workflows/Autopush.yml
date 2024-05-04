@@ -53,7 +53,7 @@ jobs:
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
       with:
-        files: llbds_${{ steps.format_version.outputs.version  }}.zip 
+        files: llbds.zip 
         name: LeviLaminaBDS - ${{ steps.format_version.outputs.version  }}
         tag_name: ${{ steps.format_version.outputs.version  }}
         body: |
