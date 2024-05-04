@@ -1,4 +1,4 @@
-name: Release LeviLaminaBDS
+name: Release LeviLaminaBDS[auto]
 
 on:
   workflow_dispatch:
@@ -33,12 +33,6 @@ jobs:
         repo: LeviLamina
     - name: Check Out
       uses: actions/checkout@v3
-    - name: Install Lip
-      run: |
-        rm README.md
-        rm LICENSE
-        Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip -Outfile ./lip.zip
-        unzip lip.zip
     - name: Install Lip
       run: |
         rm README.md
