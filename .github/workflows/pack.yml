@@ -22,13 +22,21 @@ on:
 
 jobs:
   build:
-    if: github.event.repository.owner.id == github.event.sender.id
     permissions:
       contents: write
     runs-on: windows-latest
     steps: 
     - name: Check Out
       uses: actions/checkout@v3
+    - name: Get Latest Release
+      id: latest_version
+      uses: pozetroninc/github-action-get-latest-release@master
+      with:
+        owner: LiteLDev
+        repo: LeviLamina
+    - name: Remove 'v' from version
+      id: format_version
+      run: echo "::set-output name=version::$(echo ${{ steps.latest_version.outputs.release }} | cut -c 2-)"
     - name: Install Lip
       run: |
         rm README.md
@@ -39,7 +47,7 @@ jobs:
       run: |
         mkdir llbds
         cd llbds
-        ../lip.exe install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER}}
+        ../lip.exe install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER }}
         ls
     - name: Install LSE
       if: github.event.inputs.LSE == 'true'
@@ -59,20 +67,26 @@ jobs:
         cd llbds
         ../user_scripts.bat
         cd ../
+    - name: Get BDS core version and delete file
+      id: get_bds_core_version
+      run: |
+        $file = Get-ChildItem -Path .\llbds\.cache\bdsdown\ -File | Select-Object -First 1
+        echo "::set-output name=bds_core_version::$(echo $file.Name)"
+        Remove-Item -Path $file.FullName
     - name: Pack files
       run: |
         Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile ./7z.exe
         .\7z.exe
-        7z a -tzip llbds_${{ github.event.inputs.LL_VER }}.zip llbds\
+        7z a -tzip llbds_${{ github.event.inputs.LL_VER  }}.zip llbds\
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
       with:
-        files: llbds_${{ github.event.inputs.LL_VER }}.zip 
-        name: LeviLaminaBDS - ${{ github.event.inputs.LL_VER }}
-        tag_name: ${{ github.event.inputs.LL_VER }}
+        files: llbds_${{ github.event.inputs.LL_VER  }}.zip 
+        name: LeviLaminaBDS - ${{ github.event.inputs.LL_VER  }}
+        tag_name: ${{ github.event.inputs.LL_VER  }}
         body: |
-          LeviLamina version: ${{ github.event.inputs.LL_VER }}
-          Include LSE: ${{ github.event.inputs.LSE }}
-          Include Runtime: ${{ github.event.inputs.RUNTIME }}
+          LeviLamina version: ${{ github.event.inputs.LL_VER  }}
+          Support BDS core: ${{ steps.get_bds_core_version.outputs.bds_core_version }}
+          Include LSE: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
