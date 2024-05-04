@@ -49,7 +49,7 @@ jobs:
       run: |
         Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile ./7z.exe
         .\7z.exe
-        7z a -tzip llbds_${{ steps.format_version.outputs.version  }}.zip llbds\
+        7z a -tzip llbds.zip llbds\
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
       with:
