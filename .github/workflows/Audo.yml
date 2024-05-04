@@ -2,11 +2,11 @@ name: Release LeviLaminaBDS[auto]
 
 on:
   schedule:
-    - cron: "0 09 * * *"
+    - cron: '*/10 * * * *' 
   workflow_dispatch:
+  
 jobs:
   build:
-    if: github.event.repository.owner.id == github.event.sender.id
     permissions:
       contents: write
     runs-on: windows-latest
