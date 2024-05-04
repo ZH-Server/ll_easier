@@ -33,9 +33,7 @@ jobs:
         repo: LeviLamina
     - name: Remove 'v' from version
       id: format_version
-      run: echo "::set-output name=version::${{ replace(steps.format_version.outputs.version , 'v', '') }}"
-    - name: Check Out
-      uses: actions/checkout@v3
+      run: echo "::set-output name=version::${{ replace(steps.latest_version.outputs.release, 'v', '') }}"
     - name: Install Lip
       run: |
         rm README.md
