@@ -2,7 +2,7 @@ name: Release LeviLaminaBDS[auto]
 
 on:
   schedule:
-    - cron: '36 08 * * *' 
+    - cron: '0 09 * * *' 
 jobs:
   build:
     if: github.event.repository.owner.id == github.event.sender.id
