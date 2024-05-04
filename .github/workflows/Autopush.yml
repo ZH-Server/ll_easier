@@ -66,15 +66,16 @@ jobs:
         Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile ./7z.exe
         .\7z.exe
         7z a -tzip llbds_${{ github.event.inputs.LL_VER }}.zip llbds\
-    - name: Upload to Release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: llbds_${{ github.event.inputs.LL_VER }}.zip 
-        name: LeviLaminaBDS - ${{ github.event.inputs.LL_VER }}
-        tag_name: ${{ github.event.inputs.LL_VER }}
-        body: |
-          LeviLamina version: ${{ github.event.inputs.LL_VER }}
-          Include LSE: ${{ github.event.inputs.LSE }}
-          Include Runtime: ${{ github.event.inputs.RUNTIME }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+- name: Upload to Release
+  uses: softprops/action-gh-release@v1
+  with:
+    files: llbds_${{ steps.latest_version.outputs.release }}.zip 
+    name: LeviLaminaBDS - ${{ steps.latest_version.outputs.release }}
+    tag_name: ${{ steps.latest_version.outputs.release }}
+    body: |
+      LeviLamina version: ${{ steps.latest_version.outputs.release }}
+      Include LSE: ${{ github.event.inputs.LSE }}
+      Include Runtime: ${{ github.event.inputs.RUNTIME }}
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
