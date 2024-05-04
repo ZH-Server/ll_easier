@@ -50,7 +50,6 @@ jobs:
         tag_name: ${{ steps.format_version.outputs.version  }}
         body: |
           LeviLamina version: ${{ steps.format_version.outputs.version  }}
-          Include LSE: ${{ github.event.inputs.LSE }}
-          Include Runtime: ${{ github.event.inputs.RUNTIME }}
+          Include LSE: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
