@@ -31,6 +31,9 @@ jobs:
       with:
         owner: LiteLDev
         repo: LeviLamina
+    - name: Remove 'v' from version
+      id: format_version
+      run: echo "::set-output name=version::${{ replace(steps.format_version.outputs.version , 'v', '') }}"
     - name: Check Out
       uses: actions/checkout@v3
     - name: Install Lip
@@ -43,7 +46,7 @@ jobs:
       run: |
         mkdir llbds
         cd llbds
-        ../lip.exe install -y github.com/LiteLDev/LeviLamina@${{ steps.latest_version.outputs.release}}
+        ../lip.exe install -y github.com/LiteLDev/LeviLamina@${{ steps.format_version.outputs.version }}
         ls
     - name: Install LSE
       if: github.event.inputs.LSE == 'true'
@@ -67,15 +70,15 @@ jobs:
       run: |
         Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile ./7z.exe
         .\7z.exe
-        7z a -tzip llbds_${{ steps.latest_version.outputs.release }}.zip llbds\
+        7z a -tzip llbds_${{ steps.format_version.outputs.version  }}.zip llbds\
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
       with:
-        files: llbds_${{ steps.latest_version.outputs.release }}.zip 
-        name: LeviLaminaBDS - ${{ steps.latest_version.outputs.release }}
-        tag_name: ${{ steps.latest_version.outputs.release }}
+        files: llbds_${{ steps.format_version.outputs.version  }}.zip 
+        name: LeviLaminaBDS - ${{ steps.format_version.outputs.version  }}
+        tag_name: ${{ steps.format_version.outputs.version  }}
         body: |
-          LeviLamina version: ${{ steps.latest_version.outputs.release }}
+          LeviLamina version: ${{ steps.format_version.outputs.version  }}
           Include LSE: ${{ github.event.inputs.LSE }}
           Include Runtime: ${{ github.event.inputs.RUNTIME }}
       env:
