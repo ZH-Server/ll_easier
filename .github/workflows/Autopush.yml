@@ -1,25 +1,10 @@
-name: Release LeviLaminaBDS
+name: Release LeviLaminaBDS[auto]
 
 on:
+  schedule:
+    - cron: '0 16 * * *' 
   workflow_dispatch:
-    inputs:
-      LL_VER:
-        description: 'LeviLamina version'
-        required: true
-        default: '0.1.0'
-      LSE:
-        description: 'LegacyScriptEngine include'
-        required: false
-        default: 'true'
-      RUNTIME:
-        description: 'Runtime for LeviLamina'
-        required: false
-        default: 'false'
-      SCRIPTS:
-        description: 'User scripts'
-        required: false
-        default: 'false'
-
+  
 jobs:
   build:
     permissions:
@@ -47,25 +32,12 @@ jobs:
       run: |
         mkdir llbds
         cd llbds
-        ../lip.exe install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER }}
+        ../lip.exe install -y github.com/LiteLDev/LeviLamina@${{ steps.format_version.outputs.version }}
         ls
     - name: Install LSE
-      if: github.event.inputs.LSE == 'true'
       run: |
         cd llbds
         ../lip.exe install -y github.com/LiteLDev/LegacyScriptEngine
-        cd ../
-    - name: Install runtime
-      if: github.event.inputs.RUNTIME == 'true'
-      run: |
-        cd llbds
-        Invoke-WebRequest -Uri https://aka.ms/vs/17/release/vc_redist.x64.exe -Outfile ./runtime_for_levilamina.exe
-        cd ../
-    - name: Run user scripts
-      if: github.event.inputs.SCRIPTS == 'true'
-      run: |
-        cd llbds
-        ../user_scripts.bat
         cd ../
     - name: Get BDS core version and delete file
       id: get_bds_core_version
@@ -77,15 +49,15 @@ jobs:
       run: |
         Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile ./7z.exe
         .\7z.exe
-        7z a -tzip llbds_${{ github.event.inputs.LL_VER  }}.zip llbds\
+        7z a -tzip llbds.zip llbds\
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
       with:
-        files: llbds_${{ github.event.inputs.LL_VER  }}.zip 
-        name: LeviLaminaBDS - ${{ github.event.inputs.LL_VER  }}
-        tag_name: ${{ github.event.inputs.LL_VER  }}
+        files: llbds.zip 
+        name: LeviLaminaBDS - ${{ steps.format_version.outputs.version  }}
+        tag_name: ${{ steps.format_version.outputs.version  }}
         body: |
-          LeviLamina version: ${{ github.event.inputs.LL_VER  }}
+          LeviLamina version: ${{ steps.format_version.outputs.version  }}
           Support BDS core: ${{ steps.get_bds_core_version.outputs.bds_core_version }}
           Include LSE: true
       env:

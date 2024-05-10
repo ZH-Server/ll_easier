@@ -1,8 +1,7 @@
-# LLBDS Packer
+# LeviLamina_Autopack
 
-[![latest-levilamia](https://img.shields.io/github/v/tag/LiteLDev/LiteLoaderBDS?label=Version&style=for-the-badge "LeviLamina")](https://github.com/LiteLDev/LiteLoaderBDS/releases/latest)
-
-一个用来打包指定版本的 带有 LeviLamina 的 Minecraft Bedrock Edition Server 的 GitAction 
+基于https://github.com/FTS427/llbds_packer   二次开发
+一个自动生成最新版本的 带有 LeviLamina 的 Minecraft Bedrock Edition Server 的 整合包 的 action
 
 ## 如何食用?
 
