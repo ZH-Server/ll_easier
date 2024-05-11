@@ -1,8 +1,10 @@
 # LeviLamina & BDS Packer
 
+**此仓库与 Mojang Studio 无关，本仓库只提供了非官方(Mojang Studio, LiteDev)构建的服务器打包，您使用本仓库进行构建说明您已经同意了 EULA 条款**
+
 一个自动打包最新版本的 带有 LeviLamina 的 Minecraft Bedrock Edition Server 的 Git Action
 
-我们希望以最高效、最方便的方式对 LeviLamina & BDS 的打包和管理
+我们只希望以最高效、最方便的方式对 LeviLamina & BDS 的打包和管理
 
 ## 如何食用?
 
