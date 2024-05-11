@@ -1,7 +1,8 @@
-# LeviLamina_Autopack
+# LeviLamina & BDS Packer
 
-基于https://github.com/FTS427/llbds_packer   二次开发
-一个自动生成最新版本的 带有 LeviLamina 的 Minecraft Bedrock Edition Server 的 整合包 的 action
+一个自动打包最新版本的 带有 LeviLamina 的 Minecraft Bedrock Edition Server 的 Git Action
+
+我们希望以最高效、最方便的方式对 LeviLamina & BDS 的打包和管理
 
 ## 如何食用?
 
@@ -38,7 +39,7 @@ llbds_版本号.zip 解压后就是一个完整的带有 lip 环境的 LeviLamin
 
 ## 有Bug和建议?
 
-提在 Issues 里，或交 PR 
+提在 Issues 里，或交 PR
 
 什么？你说从 `Release` 中下载更慢？可以用一些镜像站嘛～
 
