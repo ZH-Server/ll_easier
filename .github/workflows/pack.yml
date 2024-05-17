@@ -1,4 +1,4 @@
-name: Release LeviLaminaBDS
+name: Pack LeviLamina
 
 on:
   workflow_dispatch:
@@ -63,6 +63,11 @@ jobs:
         $file = Get-ChildItem -Path .\llbds\.cache\bdsdown\ -File | Select-Object -First 1
         echo "::set-output name=bds_core_version::$(echo $file.Name)"
         Remove-Item -Path $file.FullName
+    - name: Remove BDS
+      run: |
+        cd llbds
+        ls
+        cd ../
     - name: Pack files
       run: |
         Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile ./7z.exe
@@ -76,7 +81,7 @@ jobs:
         tag_name: ${{ github.event.inputs.LL_VER  }}
         body: |
           LeviLamina version: ${{ github.event.inputs.LL_VER  }}
-          BDS core version: ${{ steps.get_bds_core_version.outputs.bds_core_version }}
+          BDS core needed version: ${{ steps.get_bds_core_version.outputs.bds_core_version }}
           Include LSE: ${{ github.event.inputs.LSE }}
           Include runtime: ${{ github.event.inputs.RUNTIME }}
       env:
