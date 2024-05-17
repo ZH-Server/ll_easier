@@ -1,10 +1,10 @@
-# LeviLamina & BDS Packer
+# LeviLamina Easier
 
 **此仓库与 Mojang Studio 无关，本仓库只提供了非官方(Mojang Studio, LiteDev)构建的服务器打包，您使用本仓库进行构建说明您已经同意了 EULA 条款**
 
-一个自动打包最新版本的 带有 LeviLamina 的 Minecraft Bedrock Edition Server 的 Git Action
+一个自动打包最新版本的 带有 LeviLamina 环境的 Git Action
 
-我们只希望以最高效、最方便的方式对 LeviLamina & BDS 的打包和管理
+我们只希望以最高效、最方便的方式对 LeviLamina 进行安装
 
 ## 如何食用?
 
@@ -12,13 +12,11 @@
 
 然后打开 `Action` 页面
 
-点击右侧的 `Pack LLBDS`
+点击右侧的 `Pack LeviLamina`
 
 打开 `Run workflow` 填入你需要的 LeviLamina 版本号(本 README 上的蓝色小标签中的数字)，以及按照个人需求填写其他内容
 
-点击 `Run workflow` 后，一杯白开水的功夫你就可以去 `Release` 里找到期待中的 `llbds_版本号.zip` 啦！
-
-llbds_版本号.zip 解压后就是一个完整的带有 lip 环境的 LeviLamina + BDS 了
+点击 `Run workflow` 后，一杯白开水的功夫你就可以去 `Release` 里找到期待中的 `ll_ll版本号_所需bds版本号.zip` 啦！
 
 ## `Run workflow` 页中选项解释
 
@@ -33,7 +31,7 @@ llbds_版本号.zip 解压后就是一个完整的带有 lip 环境的 LeviLamin
 
 ## 工作原理
 
-在 GitAction 的服务器上先安装 lip ，之后利用 GitAction 的服务器“网速快”的“特性”，用 lip 安装 LeviLamina 之类，安装完成后再将其文件压缩为 llbds_版本号.zip 扔在 Release 中
+在 GitAction 的服务器上先安装 lip ，之后利用 GitAction 的服务器“网速快”的“特性”，用 lip 安装 LeviLamina 之类，安装完成后再将其文件压缩并扔在 Release 中
 
 ## 有啥用?
 
