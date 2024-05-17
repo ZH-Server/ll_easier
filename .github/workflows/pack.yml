@@ -36,37 +36,36 @@ jobs:
         unzip lip.zip
     - name: Install LeviLamina
       run: |
-        mkdir llbds
-        cd llbds
+        mkdir ll
+        cd ll
         ../lip.exe install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER }}
     - name: Install LSE
       if: github.event.inputs.LSE == 'true'
       run: |
-        cd llbds
+        cd ll
         ../lip.exe install -y github.com/LiteLDev/LegacyScriptEngine
         cd ../
     - name: Install runtime
       if: github.event.inputs.RUNTIME == 'true'
       run: |
-        cd llbds
+        cd ll
         Invoke-WebRequest -Uri https://aka.ms/vs/17/release/vc_redist.x64.exe -Outfile ./runtime_for_levilamina.exe
         cd ../
     - name: Run user scripts
       if: github.event.inputs.SCRIPTS == 'true'
       run: |
-        cd llbds
+        cd ll
         ../user_scripts.bat
         cd ../
     - name: Get BDS core version and delete file
       id: get_bds_core_version
       run: |
-        $file = Get-ChildItem -Path .\llbds\.cache\bdsdown\ -File | Select-Object -First 1
+        $file = Get-ChildItem -Path .\ll\.cache\bdsdown\ -File | Select-Object -First 1
         echo "::set-output name=bds_core_version::$(echo $file.Name)"
         Remove-Item -Path $file.FullName
     - name: Remove BDS
       run: |
-        cd llbds
-        ls
+        cd ll
         rm .\behavior_packs -Force -Recurse
         rm .\definitions -Force -Recurse
         rm .\resource_packs -Force -Recurse
@@ -76,18 +75,17 @@ jobs:
         rm .\permissions.json -Force
         rm .\release-notes.txt -Force
         rm .\server.properties -Force
-        ls
         cd ../
     - name: Pack files
       run: |
         Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile ./7z.exe
         .\7z.exe
-        7z a -tzip llbds_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }}.zip llbds\
+        7z a -tzip ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }}.zip ll\
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
       with:
-        files: llbds_${{ github.event.inputs.LL_VER  }}.zip 
-        name: LeviLaminaBDS - ${{ github.event.inputs.LL_VER  }}
+        files: ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }}.zip 
+        name: LeviLamina packed - ${{ github.event.inputs.LL_VER  }}
         tag_name: ${{ github.event.inputs.LL_VER  }}
         body: |
           LeviLamina version: ${{ github.event.inputs.LL_VER  }}
