@@ -1,4 +1,4 @@
-name: Release LeviLaminaBDS[auto]
+name: Pack LeviLamina With BDS[Auto]
 
 on:
   schedule:
