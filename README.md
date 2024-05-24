@@ -1,4 +1,4 @@
-# LeviLamina Easier
+# LeviLamina Easier (Auto 自动打包)
 
 **此仓库与 Mojang Studio 无关，本仓库只提供了非官方(Mojang Studio, LiteDev)构建的服务器打包，您使用本仓库进行构建说明您已经同意了 EULA 条款**
 
@@ -18,8 +18,6 @@
 
 点击 `Run workflow` 后，一杯白开水的功夫你就可以去 `Release` 里找到期待中的 `ll_ll版本号_所需bds版本号.zip` 啦！
 
-## 如何利用得到的压缩文件开服
-
 ## `Run workflow` 页中选项解释
 
 | 名称          | 解释                      | 默认值        |
@@ -33,19 +31,9 @@
 
 ## 工作原理
 
-在 GitAction 的服务器上先安装 lip ，之后利用 GitAction 的服务器“网速快”的“特性”，用 lip 安装 LeviLamina 之类，安装完成后再将其文件压缩并扔在 Release 中
+在 Git Action 的服务器上先安装 lip ，之后利用 Git Action 的服务器“网速快”的“特性”，用 lip 安装 LeviLamina 之类，安装完成后再将其文件压缩并扔在 Release 中
 
 ## 有啥用?
 
 新版的 LeviLamina 安装手动安装不是很简单，这对腐竹有一定技术要求；用 lip 自动安装网络又不太好导致安装过程出现各种奇怪问题，所以有了这个仓库以减轻开服难度
-
-## 有Bug和建议?
-
-提在 Issues 里，或交 PR
-
-什么？你说从 `Release` 中下载更慢？可以用一些镜像站嘛～
-
-[镜像站1](https://moeyy.cn/gh-proxy)
-
-[镜像站2](https://gh.lldc.top)
 
