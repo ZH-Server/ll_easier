@@ -94,12 +94,13 @@ jobs:
     - name: 📦 Pack Files
       run: |
         7z a ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }}.zip .\ll\
+        pwd
         ls
     
     - name: 🎉 Upload Release
       uses: softprops/action-gh-release@v1
       with:
-        files: ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }}.zip
+        files: "$env:GITHUB_WORKSPACE\ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }}.zip"
         name: LeviLamina Packed - ${{ github.event.inputs.LL_VER  }}
         tag_name: ${{ github.event.inputs.LL_VER  }}
         body: |
