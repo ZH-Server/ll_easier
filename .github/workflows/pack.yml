@@ -8,15 +8,15 @@ on:
         required: true
         default: '0.1.0'
       LSE:
-        description: 'LegacyScriptEngine include'
+        description: 'If include LegacyScriptEngine'
         required: false
-        default: 'true'
+        default: 'false'
       RUNTIME:
-        description: 'Runtime for LeviLamina'
+        description: 'If include runtime for LeviLamina'
         required: false
         default: 'false'
       SCRIPTS:
-        description: 'User scripts'
+        description: 'Use user_scripts.bat'
         required: false
         default: 'false'
 
@@ -27,30 +27,31 @@ jobs:
     runs-on: windows-latest
     steps: 
     
-    - name: Check Out Repo
+    - name: 💡 Check Out Repo
       uses: actions/checkout@v3
 
     - name: 🛠️ Install Lip & Prepare Environment
       run: |
         rm README.md
-        mv LICENSE LICENSE_repo
+        mkdir ll
+        mv .\LICENSE .\ll\LICENSE
         Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/latest/download/lip-windows-amd64.zip -Outfile .\lip.zip
         Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile .\7z.exe
         .\7z.exe
         unzip lip.zip
-        mkdir ll
 
     - name: 🧰 Install LeviLamina
       run: |
         cd ll
         ..\lip.exe install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER }}
-        mv ..\LICENSE_repo .\LICENSE
     
     - name: ⚙️ Install LSE
       if: github.event.inputs.LSE == 'true'
       run: |
         cd ll
         ..\lip.exe install -y github.com/LiteLDev/LegacyScriptEngine
+        ..\lip.exe install -y gitea.litebds.com/LiteLDev/legacy-script-engine-nodejs
+        ..\lip.exe install -y gitea.litebds.com/LiteLDev/legacy-script-engine-python
         cd ..\
     
     - name: 🔧 Install Runtime
@@ -64,6 +65,7 @@ jobs:
       if: github.event.inputs.SCRIPTS == 'true'
       run: |
         cd ll
+        # alias ..\lip.exe install -y -> lipin
         ..\user_scripts.bat
         cd ..\
     
@@ -74,6 +76,7 @@ jobs:
         echo "::set-output name=bds_core_version::$(echo $file.Name)"
         Remove-Item -Path $file.FullName
         cd ll
+        ls
         rm .\behavior_packs -Force -Recurse
         rm .\definitions -Force -Recurse
         rm .\resource_packs -Force -Recurse
@@ -83,8 +86,8 @@ jobs:
         rm .\permissions.json -Force
         rm .\release-notes.txt -Force
         rm .\server.properties -Force
-        rm .\config -Force
-        rm .\.cache -Force
+        rm .\*c* -Force
+        #rm .\.cache -Force
         cd ..\
     
     - name: 📦 Pack Files
