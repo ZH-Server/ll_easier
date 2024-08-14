@@ -95,19 +95,19 @@ jobs:
     
     - name: 📦 Pack Files
       run: |
-        7z a -tzip ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }} ll\
+        7z a -tzip .\ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }} .\ll\
     
     - name: 🎉 Upload Release
       uses: softprops/action-gh-release@v1
       with:
         files: ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }} 
-        name: LeviLamina packed - ${{ github.event.inputs.LL_VER  }}
+        name: LeviLamina Packed - ${{ github.event.inputs.LL_VER  }}
         tag_name: ${{ github.event.inputs.LL_VER  }}
         body: |
           LeviLamina version: ${{ github.event.inputs.LL_VER  }}
           BDS core needed version: ${{ steps.get_bds_core_version.outputs.bds_core_version }}
           Include LSE: ${{ github.event.inputs.LSE }}
           Include Runtime: ${{ github.event.inputs.RUNTIME }}
-          Use user'_scripts.bat: ${{ github.event.inputs.SCRIPTS }}
+          Use user_scripts.bat: ${{ github.event.inputs.SCRIPTS }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
