@@ -39,19 +39,21 @@ jobs:
         Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile .\7z.exe
         .\7z.exe
         unzip lip.zip
+        "$env:GITHUB_WORKSPACE" | Out-File -FilePath $env:GITHUB_PATH -Append
+
 
     - name: 🧰 Install LeviLamina
       run: |
         cd ll
-        ..\lip.exe install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER }}
+        lip install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER }}
     
     - name: ⚙️ Install LSE
       if: github.event.inputs.LSE == 'true'
       run: |
         cd ll
-        ..\lip.exe install -y github.com/LiteLDev/LegacyScriptEngine
-        ..\lip.exe install -y gitea.litebds.com/LiteLDev/legacy-script-engine-nodejs
-        ..\lip.exe install -y gitea.litebds.com/LiteLDev/legacy-script-engine-python
+        lip.exe install -y github.com/LiteLDev/LegacyScriptEngine
+        lip.exe install -y gitea.litebds.com/LiteLDev/legacy-script-engine-nodejs
+        lip.exe install -y gitea.litebds.com/LiteLDev/legacy-script-engine-python
         cd ..\
     
     - name: 🔧 Install Runtime
@@ -66,7 +68,7 @@ jobs:
       run: |
         cd ll
         # alias ..\lip.exe install -y -> lipin
-        ..\user_scripts.bat
+        user_scripts.bat
         cd ..\
     
     - name: 📂 Get BDS Core Version & Remove BDS
@@ -80,14 +82,14 @@ jobs:
         rm .\behavior_packs -Force -Recurse
         rm .\definitions -Force -Recurse
         rm .\resource_packs -Force -Recurse
+        rm .\bedrock_* -Force -Recurse
+        rm .\config -Force -Recurse
+        rm .\.cache -Force -Recurse
         rm .\allowlist.json -Force
         rm .\bdsdown.exe -Force
-        rm .\bedrock_* -Force -Recurse
         rm .\permissions.json -Force
         rm .\release-notes.txt -Force
         rm .\server.properties -Force
-        rm .\*c* -Force
-        #rm .\.cache -Force
         cd ..\
     
     - name: 📦 Pack Files
@@ -105,6 +107,6 @@ jobs:
           BDS core needed version: ${{ steps.get_bds_core_version.outputs.bds_core_version }}
           Include LSE: ${{ github.event.inputs.LSE }}
           Include Runtime: ${{ github.event.inputs.RUNTIME }}
-          Use User's Scripts: ${{ github.event.inputs.SCRIPTS }}
+          Use user'_scripts.bat: ${{ github.event.inputs.SCRIPTS }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
