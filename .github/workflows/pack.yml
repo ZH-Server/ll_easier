@@ -36,15 +36,13 @@ jobs:
     - name: 🛠️ Install Lip & Prepare Environment
       run: |
         mkdir ll
-        mkdir .bin
-        mv .\LICENSE .\ll\LICENSE
-        cd .\.bin\
-        mv ..\user_scripts.bat .\
+        mv .\LICENSE .\ll\LL_Easier_LICENSE
+        cd .\scripts
         Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/latest/download/lip-windows-amd64.zip -Outfile .\lip.zip
         Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile .\7z_installer.exe
         .\7z_installer.exe
         unzip lip.zip
-        "$env:GITHUB_WORKSPACE\.bin" | Out-File -FilePath $env:GITHUB_PATH -Append
+        "$env:GITHUB_WORKSPACE\scripts" | Out-File -FilePath $env:GITHUB_PATH -Append
 
     - name: 🧰 Install LeviLamina
       working-directory: ll
@@ -69,16 +67,17 @@ jobs:
       working-directory: ll
       if: github.event.inputs.SCRIPTS == 'true'
       run: |
-        # alias ..\lip.exe install -y -> lipin
-        user_scripts.bat
+        # alias lip.exe install -y -> lipin
+        user_scripts.ps1
     
     - name: 📂 Get BDS Core Version & Remove BDS
       id: get_bds_core_version
       working-directory: ll
       run: |
-        $file = Get-ChildItem -Path .\.cache\bdsdown\ -File | Select-Object -First 1
+        #$file = Get-ChildItem -Path .\.cache\bdsdown\ -File | Select-Object -First 1
         "bds_core_version=$(echo $file.Name)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
-        Remove-Item -Path $file.FullName
+        #Remove-Item -Path $file.FullName
+        "bds_core_version=$(echo $get_version.ps1)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
         rm .\behavior_packs -Force -Recurse
         rm .\definitions -Force -Recurse
         rm .\resource_packs -Force -Recurse
@@ -93,12 +92,12 @@ jobs:
     
     - name: 📦 Pack Files
       run: |
-        7z a ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }} .\ll\
+        7z a ll_${{ github.event.inputs.LL_VER  }}-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }}.zip .\ll\
     
     - name: 🎉 Upload Release
       uses: softprops/action-gh-release@v1
       with:
-        files: ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }}
+        files: ll_${{ github.event.inputs.LL_VER  }}-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }}.zip
         name: LeviLamina Packed - ${{ github.event.inputs.LL_VER  }}
         tag_name: ${{ github.event.inputs.LL_VER  }}
         body: |
