@@ -28,7 +28,6 @@ jobs:
     defaults:
       run:
         shell: pwsh
-        working-directory: "$env:GITHUB_WORKSPACE"
     steps: 
     
     - name: 💡 Check Out Repo
@@ -46,7 +45,6 @@ jobs:
         .\7z.exe
         unzip lip.zip
         "$env:GITHUB_WORKSPACE\.bin" | Out-File -FilePath $env:GITHUB_PATH -Append
-
 
     - name: 🧰 Install LeviLamina
       working-directory: ll
