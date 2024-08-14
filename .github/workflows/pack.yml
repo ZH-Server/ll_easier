@@ -26,46 +26,53 @@ jobs:
       contents: write
     runs-on: windows-latest
     steps: 
-    - name: Check Out
+    
+    - name: Check Out Repo
       uses: actions/checkout@v3
-    - name: Install Lip
+
+    - name: 🛠️ Install Lip & Prepare Environment
       run: |
         rm README.md
         mv LICENSE LICENSE_repo
-        Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip -Outfile ./lip.zip
+        Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/latest/download/lip-windows-amd64.zip -Outfile .\lip.zip
+        Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile .\7z.exe
+        .\7z.exe
         unzip lip.zip
-    - name: Install LeviLamina
-      run: |
         mkdir ll
+
+    - name: 🧰 Install LeviLamina
+      run: |
         cd ll
-        ../lip.exe install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER }}
-        mv ../LICENSE_repo ./LICENSE
-    - name: Install LSE
+        ..\lip.exe install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER }}
+        mv ..\LICENSE_repo .\LICENSE
+    
+    - name: ⚙️ Install LSE
       if: github.event.inputs.LSE == 'true'
       run: |
         cd ll
-        ../lip.exe install -y github.com/LiteLDev/LegacyScriptEngine
-        cd ../
-    - name: Install runtime
+        ..\lip.exe install -y github.com/LiteLDev/LegacyScriptEngine
+        cd ..\
+    
+    - name: 🔧 Install Runtime
       if: github.event.inputs.RUNTIME == 'true'
       run: |
         cd ll
-        Invoke-WebRequest -Uri https://aka.ms/vs/17/release/vc_redist.x64.exe -Outfile ./runtime_for_levilamina.exe
-        cd ../
-    - name: Run user scripts
+        Invoke-WebRequest -Uri https://aka.ms/vs/17/release/vc_redist.x64.exe -Outfile .\runtime_for_levilamina.exe
+        cd ..\
+    
+    - name: 📜 Run User's Scripts
       if: github.event.inputs.SCRIPTS == 'true'
       run: |
         cd ll
-        ../user_scripts.bat
-        cd ../
-    - name: Get BDS core version and delete file
+        ..\user_scripts.bat
+        cd ..\
+    
+    - name: 📂 Get BDS Core Version & Remove BDS
       id: get_bds_core_version
       run: |
         $file = Get-ChildItem -Path .\ll\.cache\bdsdown\ -File | Select-Object -First 1
         echo "::set-output name=bds_core_version::$(echo $file.Name)"
         Remove-Item -Path $file.FullName
-    - name: Remove BDS
-      run: |
         cd ll
         rm .\behavior_packs -Force -Recurse
         rm .\definitions -Force -Recurse
@@ -78,22 +85,23 @@ jobs:
         rm .\server.properties -Force
         rm .\config -Force
         rm .\.cache -Force
-        cd ../
-    - name: Pack files
+        cd ..\
+    
+    - name: 📦 Pack Files
       run: |
-        Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile ./7z.exe
-        .\7z.exe
-        7z a -tzip ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }}.zip ll\
-    - name: Upload to Release
+        7z a -tzip ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }} ll\
+    
+    - name: 🎉 Upload Release
       uses: softprops/action-gh-release@v1
       with:
-        files: ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }}.zip 
+        files: ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }} 
         name: LeviLamina packed - ${{ github.event.inputs.LL_VER  }}
         tag_name: ${{ github.event.inputs.LL_VER  }}
         body: |
           LeviLamina version: ${{ github.event.inputs.LL_VER  }}
           BDS core needed version: ${{ steps.get_bds_core_version.outputs.bds_core_version }}
           Include LSE: ${{ github.event.inputs.LSE }}
-          Include runtime: ${{ github.event.inputs.RUNTIME }}
+          Include Runtime: ${{ github.event.inputs.RUNTIME }}
+          Use User's Scripts: ${{ github.event.inputs.SCRIPTS }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
