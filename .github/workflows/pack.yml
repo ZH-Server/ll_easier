@@ -75,7 +75,7 @@ jobs:
       working-directory: ll
       run: |
         #$file = Get-ChildItem -Path .\.cache\bdsdown\ -File | Select-Object -First 1
-        "bds_core_version=$(echo $file.Name)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+        #"bds_core_version=$(echo $file.Name)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
         #Remove-Item -Path $file.FullName
         "bds_core_version=$(echo $get_version.ps1)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
         rm .\behavior_packs -Force -Recurse
