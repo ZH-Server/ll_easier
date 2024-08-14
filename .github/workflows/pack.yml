@@ -31,7 +31,7 @@ jobs:
     - name: Install Lip
       run: |
         rm README.md
-        rm LICENSE
+        mv LICENSE LICENSE_repo
         Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/download/v0.21.2/lip-windows-amd64.zip -Outfile ./lip.zip
         unzip lip.zip
     - name: Install LeviLamina
@@ -39,6 +39,7 @@ jobs:
         mkdir ll
         cd ll
         ../lip.exe install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER }}
+        mv ../LICENSE_repo ./LICENSE
     - name: Install LSE
       if: github.event.inputs.LSE == 'true'
       run: |
@@ -75,6 +76,7 @@ jobs:
         rm .\permissions.json -Force
         rm .\release-notes.txt -Force
         rm .\server.properties -Force
+        rm .\config -Force
         cd ../
     - name: Pack files
       run: |
