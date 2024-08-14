@@ -93,7 +93,7 @@ jobs:
     
     - name: 📦 Pack Files
       run: |
-        7z a -tzip .\ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }} .\ll\
+        7z a ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }} .\ll\
     
     - name: 🎉 Upload Release
       uses: softprops/action-gh-release@v1
