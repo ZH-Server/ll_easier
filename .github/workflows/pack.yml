@@ -77,7 +77,7 @@ jobs:
       working-directory: ll
       run: |
         $file = Get-ChildItem -Path .\.cache\bdsdown\ -File | Select-Object -First 1
-        echo "name=bds_core_version::$(echo $file.Name)" >> $GITHUB_OUTPUT
+        echo "bds_core_version=$(echo $file.Name)" >> $GITHUB_ENV
         Remove-Item -Path $file.FullName
         rm .\behavior_packs -Force -Recurse
         rm .\definitions -Force -Recurse
@@ -93,17 +93,17 @@ jobs:
     
     - name: 📦 Pack Files
       run: |
-        7z a -tzip .\ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }} .\ll\
+        7z a -tzip .\ll_${{ github.event.inputs.LL_VER  }}_$bds_core_version .\ll\
     
     - name: 🎉 Upload Release
       uses: softprops/action-gh-release@v1
       with:
-        files: ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }} 
+        files: ll_${{ github.event.inputs.LL_VER  }}_$bds_core_version 
         name: LeviLamina Packed - ${{ github.event.inputs.LL_VER  }}
         tag_name: ${{ github.event.inputs.LL_VER  }}
         body: |
           LeviLamina version: ${{ github.event.inputs.LL_VER  }}
-          BDS core needed version: ${{ steps.get_bds_core_version.outputs.bds_core_version }}
+          BDS core needed version: $bds_core_version
           Include LSE: ${{ github.event.inputs.LSE }}
           Include Runtime: ${{ github.event.inputs.RUNTIME }}
           Use user_scripts.bat: ${{ github.event.inputs.SCRIPTS }}
