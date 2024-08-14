@@ -73,7 +73,7 @@ jobs:
       id: get_bds_core_version
       run: |
         $file = Get-ChildItem -Path .\ll\.cache\bdsdown\ -File | Select-Object -First 1
-        echo "::set-output name=bds_core_version::$(echo $file.Name)"
+        echo "name=bds_core_version::$(echo $file.Name)" >> $GITHUB_OUTPUT
         Remove-Item -Path $file.FullName
         cd ll
         ls
