@@ -21,7 +21,7 @@ on:
         default: 'false'
 
 jobs:
-  build:
+  pack:
     permissions:
       contents: write
     runs-on: windows-latest
@@ -49,7 +49,7 @@ jobs:
     - name: 🧰 Install LeviLamina
       working-directory: ll
       run: |
-        lip install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER }}
+        lip.exe install -y github.com/LiteLDev/LeviLamina@${{ github.event.inputs.LL_VER }}
     
     - name: ⚙️ Install LSE
       working-directory: ll
@@ -93,12 +93,13 @@ jobs:
     
     - name: 📦 Pack Files
       run: |
-        7z a ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }} .\ll\
+        7z a ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }}.zip .\ll\
+        ls
     
     - name: 🎉 Upload Release
       uses: softprops/action-gh-release@v1
       with:
-        files: ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }} 
+        files: ll_${{ github.event.inputs.LL_VER  }}_${{ steps.get_bds_core_version.outputs.bds_core_version }}.zip
         name: LeviLamina Packed - ${{ github.event.inputs.LL_VER  }}
         tag_name: ${{ github.event.inputs.LL_VER  }}
         body: |
