@@ -21,7 +21,7 @@ on:
         default: 'false'
 
 jobs:
-  pack:
+  Pack:
     permissions:
       contents: write
     runs-on: windows-latest
@@ -103,6 +103,8 @@ jobs:
   Release:
     permissions: write-all
     runs-on: ubuntu-latest
+    steps:
+
     - name: Download Artifact
       uses: actions/download-artifact@v3
       with:
