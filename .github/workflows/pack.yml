@@ -70,12 +70,6 @@ jobs:
         # alias lip.exe install -y -> lipin
         user_scripts.ps1
 
-    - name: Get BDS core version
-      id: get_version
-      uses: FTS427/get_bds_version@main
-      with:
-        dotlip_dir: 'll/.lip'
-    
     - name: 📂 Remove BDS
       id: get_bds_core_version
       working-directory: ll
@@ -98,17 +92,45 @@ jobs:
     
     - name: 📦 Pack Files
       run: |
-        7z a ll_${{ github.event.inputs.LL_VER  }}-bds_${{ steps.get_bds_version.outputs.version }}.zip .\ll\
+        7z a ll_packed.zip .\ll\
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ll_packed
+        path: 'll_packed.zip'
+
+  Release:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    - name: Download Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: ll_packed
+    - name: Unzip Artifact
+      run: |
+        sudo apt install unzip tree
+        ls
+        unzip ll_packed.zip
+        tree
+    - name: Get version
+      uses: FTS427/get_bds_version@main
+      id: get_version
+      with:
+        dotlip_dir: 'll/.lip'
+    - name: Rename
+      run: |
+        mv ll_packed.zip ll_${{ github.event.inputs.LL_VER }}-bds_${{ steps.get_version.outputs.version }}.zip
     
     - name: 🎉 Upload Release
       uses: softprops/action-gh-release@v1
       with:
-        files: ll_${{ github.event.inputs.LL_VER  }}-bds_${{ steps.get_bds_version.outputs.version }}.zip
-        name: LeviLamina Packed - ${{ github.event.inputs.LL_VER  }}
-        tag_name: ${{ github.event.inputs.LL_VER  }}
+        files: ll_${{ github.event.inputs.LL_VER  }}-bds_${{ steps.get_version.outputs.version }}.zip
+        name: LeviLamina Packed - ${{ github.event.inputs.LL_VER }}
+        tag_name: ${{ github.event.inputs.LL_VER }}
         body: |
-          LeviLamina version: ${{ github.event.inputs.LL_VER  }}
-          BDS core needed version: ${{ steps.get_bds_version.outputs.version }}
+          LeviLamina version: ${{ github.event.inputs.LL_VER }}
+          BDS core needed version: ${{ steps.get_version.outputs.version }}
           Include LSE: ${{ github.event.inputs.LSE }}
           Include Runtime: ${{ github.event.inputs.RUNTIME }}
           Use user_scripts.bat: ${{ github.event.inputs.SCRIPTS }}
