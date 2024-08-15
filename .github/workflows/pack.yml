@@ -6,7 +6,7 @@ on:
       LL_VER:
         description: 'LeviLamina version'
         required: true
-        default: '0.1.0'
+        default: '0.13.4'
       LSE:
         description: 'If include LSE'
         required: false
@@ -16,7 +16,7 @@ on:
         required: false
         default: 'false'
       SCRIPTS:
-        description: 'Use user_scripts'
+        description: 'If use user_scripts'
         required: false
         default: 'false'
 
