@@ -114,8 +114,7 @@ jobs:
         id: get_bds_core_version
         working-directory: ll
         run: |
-          $file = Get-ChildItem -Path .\.cache\bdsdown\ -File | Select-Object -First 1
-          "bds_core_version=$(echo $file.Name)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "bds_core_version=$(python ..\scripts\get_bds_version.py)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
           rm .\behavior_packs -Force -Recurse
           rm .\definitions -Force -Recurse
           rm .\resource_packs -Force -Recurse
@@ -130,12 +129,12 @@ jobs:
 
       - name: 📦 Pack Files
         run: |
-          7z a ll_${{ steps.formated_ver.outputs.ll_version }}-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }} .\ll\
+          7z a ll_${{ steps.formated_ver.outputs.ll_version }}-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }}.zip .\ll\
     
       - name: 🎉 Upload Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ll_${{ steps.formated_ver.outputs.ll_version }}-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }}
+          files: ll_${{ steps.formated_ver.outputs.ll_version }}-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }}.zip
           name: LeviLamina Packed - ${{ steps.formated_ver.outputs.ll_version }} (auto)
           tag_name: auto-${{ steps.formated_ver.outputs.ll_version }}
           body: |
