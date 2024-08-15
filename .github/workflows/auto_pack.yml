@@ -1,0 +1,143 @@
+name: Auto Pack LeviLamina
+
+on:
+  schedule:
+    - cron: '0 16 * * *' 
+  
+jobs:
+  Read-configuration:
+    name: 🐂 Parse json
+    runs-on: ubuntu-latest
+    outputs:
+      CONFIGS: ${{ steps.generate-matrix.outputs.CONFIGS }}
+    steps:
+      # This action checks-out your CONFIGSitory under $GITHUB_WORKSPACE, so your workflow can access it.
+      - name: 😄 Checkout
+        uses: actions/checkout@v4
+
+      # Match the configuration files in the CONFIGS directory, read the contents and merge them into an array.
+      - name: 😆 Generate Matrix
+        id: generate-matrix
+        run: |
+          echo "CONFIGS<<EOF" >> $GITHUB_OUTPUT
+          jq -s '[.[][]]' auto_pack_config.json >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+  Pack:
+    permissions:
+      contents: write
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    needs:
+      - Read-configuration
+    strategy:
+        max-parallel: 4
+        fail-fast: false
+        matrix:
+          CONFIG: ${{ fromJSON(needs.Read-configuration.outputs.CONFIGS) }}
+    env:
+        LL_VER: ${{ matrix.CONFIG.LeviLaminaVersion }}
+        
+        ENABLE_LSE: ${{ matrix.CONFIG.includeLSE }}
+        ENABLE_RUNTIME: ${{ matrix.CONFIG.includeRuntime }}
+        ENABLE_SCRIPTS: ${{ matrix.CONFIG.useUserScripts }}
+
+    steps: 
+        
+      - name: 💡 Check Out Repo
+        uses: actions/checkout@v3
+    
+      - name: 🛠️ Install Lip & Prepare Environment
+        run: |
+          mkdir ll
+          mv .\LICENSE .\ll\LL_Easier_LICENSE
+          cd .\scripts
+          Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/latest/download/lip-windows-amd64.zip -Outfile .\lip.zip
+          Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile .\7z_installer.exe
+          .\7z_installer.exe
+          unzip lip.zip
+          "$env:GITHUB_WORKSPACE\scripts" | Out-File -FilePath $env:GITHUB_PATH -Append
+      
+      - name: Get Latest LL Version
+        if: ${{ env.LL_VER == 'latest' }}
+        id: latest_version
+        uses: pozetroninc/github-action-get-latest-release@master
+        with:
+          owner: LiteLDev
+          repo: LeviLamina
+ 
+      - name: Format version
+        if: ${{ env.LL_VER == 'latest' }}
+        id: format_version
+        run: | 
+          "ll_version=$(echo ${{ steps.latest_version.outputs.release }} | cut -c 2-)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+      
+      - name: version value
+        if: ${{ env.LL_VER == 'latest' }}
+        run: |
+          echo ${{ steps.format_version.outputs.ll_version }} > ${{ env.LL_VER }}
+
+      - name: 🧰 Install LeviLamina
+        working-directory: ll
+        run: |
+          lip.exe install -y github.com/LiteLDev/LeviLamina@${{ env.LL_VER }}
+        
+      - name: ⚙️ Install LSE
+        if: ${{ env.ENABLE_LSE == 'true' }}
+        working-directory: ll
+        run: |
+          lip.exe install -y github.com/LiteLDev/LegacyScriptEngine
+          lip.exe install -y gitea.litebds.com/LiteLDev/legacy-script-engine-nodejs
+          lip.exe install -y gitea.litebds.com/LiteLDev/legacy-script-engine-python
+        
+      - name: 🔧 Install Runtime
+        if: ${{ env.ENABLE_RUNTIME == 'true' }}
+        working-directory: ll
+        run: |
+            Invoke-WebRequest -Uri https://aka.ms/vs/17/release/vc_redist.x64.exe -Outfile .\runtime_for_levilamina.exe
+        
+      - name: 📜 Run User's Scripts
+        if: ${{ env.ENABLE_SCRIPTS == 'true' }}
+        working-directory: ll
+        run: |
+          user_scripts.ps1
+    
+      - name: 📂 Get BDS core version & Remove BDS
+        id: get_bds_core_version
+        working-directory: ll
+        run: |
+          $file = Get-ChildItem -Path .\.cache\bdsdown\ -File | Select-Object -First 1
+          "bds_core_version=$(echo $file.Name)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          Remove-Item -Path $file.FullName
+          rm .\behavior_packs -Force -Recurse
+          rm .\definitions -Force -Recurse
+          rm .\resource_packs -Force -Recurse
+          rm .\bedrock_* -Force -Recurse
+          rm .\config -Force -Recurse
+          rm .\.cache -Force -Recurse
+          rm .\allowlist.json -Force
+          rm .\bdsdown.exe -Force
+          rm .\permissions.json -Force
+          rm .\release-notes.txt -Force
+          rm .\server.properties -Force
+
+      - name: 📦 Pack Files
+        run: |
+          7z a ll_${{ env.LL_VER  }}-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }} .\ll\
+    
+      - name: 🎉 Upload Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ll_${{ env.LL_VER  }}-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }}
+          name: LeviLamina Packed - ${{ env.LL_VER }}
+          tag_name: ${{ env.LL_VER }}
+          body: |
+            LeviLamina version: ${{ env.LL_VER }}
+            BDS core needed version: ${{ steps.get_bds_core_version.outputs.bds_core_version }}
+            Include LSE: ${{ env.ENABLE_LSE }}
+            Include Runtime: ${{ env.ENABLE_RUNTIME }}
+            Use user_scripts.bat: ${{ env.ENABLE_SCRIPTS }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,8 @@
+[
+    {
+        "LeviLaminaVersion": "latest",
+        "includeLSE": false,
+        "includeRuntime": false,
+        "useUserScripts": false
+    }
+]
