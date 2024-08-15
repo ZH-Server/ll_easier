@@ -8,7 +8,7 @@ on:
         required: true
         default: '0.1.0'
       LSE:
-        description: 'If include LegacyScriptEngine'
+        description: 'If include LSE'
         required: false
         default: 'false'
       RUNTIME:
@@ -16,7 +16,7 @@ on:
         required: false
         default: 'false'
       SCRIPTS:
-        description: 'Use user_scripts.bat'
+        description: 'Use user_scripts'
         required: false
         default: 'false'
 
@@ -67,17 +67,15 @@ jobs:
       working-directory: ll
       if: github.event.inputs.SCRIPTS == 'true'
       run: |
-        # alias lip.exe install -y -> lipin
         user_scripts.ps1
 
     - name: 📂 Remove BDS
       id: get_bds_core_version
       working-directory: ll
       run: |
-        #$file = Get-ChildItem -Path .\.cache\bdsdown\ -File | Select-Object -First 1
-        #"bds_core_version=$(echo $file.Name)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
-        #Remove-Item -Path $file.FullName
-        #"bds_core_version=$(echo $get_version.ps1)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+        $file = Get-ChildItem -Path .\.cache\bdsdown\ -File | Select-Object -First 1
+        "bds_core_version=$(echo $file.Name)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+        Remove-Item -Path $file.FullName
         rm .\behavior_packs -Force -Recurse
         rm .\definitions -Force -Recurse
         rm .\resource_packs -Force -Recurse
@@ -92,57 +90,20 @@ jobs:
     
     - name: 📦 Pack Files
       run: |
-        7z a ll_packed.zip .\ll\
+        7z a ll_${{ github.event.inputs.LL_VER  }}-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }}.zip .\ll\
 
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: ll_packed
-        path: 'll_packed.zip'
-
-  Release:
-    permissions: write-all
-    runs-on: ubuntu-latest
-    needs: [Pack]
-    steps:
-
-    - name: Download Artifact
-      uses: actions/download-artifact@v4
-      with:
-        repository: FTS427/ll_easier
-        name: ll_packed
-
-    - name: Unzip Artifact
-      run: |
-        sudo apt install unzip tree
-        ls
-        unzip ll_packed.zip
-        tree
-    - name: Get version
-      uses: FTS427/get_bds_version@main
-      id: get_version
-      with:
-        dotlip_dir: 'll/.lip'
-    - name: Rename
-      run: |
-        mv ll_packed.zip ll_${{ github.event.inputs.LL_VER }}-bds_${{ steps.get_version.outputs.version }}.zip
-    
     - name: 🎉 Upload Release
       uses: softprops/action-gh-release@v1
       with:
-        files: ll_${{ github.event.inputs.LL_VER  }}-bds_${{ steps.get_version.outputs.version }}.zip
+        files: ll_${{ github.event.inputs.LL_VER  }}-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }}.zip
         name: LeviLamina Packed - ${{ github.event.inputs.LL_VER }}
         tag_name: ${{ github.event.inputs.LL_VER }}
         body: |
           LeviLamina version: ${{ github.event.inputs.LL_VER }}
-          BDS core needed version: ${{ steps.get_version.outputs.version }}
+          BDS core needed version: ${{ steps.get_bds_core_version.outputs.bds_core_version }}
           Include LSE: ${{ github.event.inputs.LSE }}
           Include Runtime: ${{ github.event.inputs.RUNTIME }}
           Use user_scripts.bat: ${{ github.event.inputs.SCRIPTS }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
-    - name: Remove Artifact
-      uses: geekyeggo/delete-artifact@v2
-      with:
-        name: ll_packed
+
