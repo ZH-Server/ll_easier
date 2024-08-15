@@ -78,16 +78,20 @@ jobs:
           #"ll_version=$(echo ${{ steps.latest_version.outputs.release }} | cut -c 2-)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
           echo $(echo ${{ steps.latest_version.outputs.release }} | cut -c 2-) > .version
       
-      - name: version value
+      - name: custom version value
         if: ${{ env.LL_VER != 'latest' }}
         run: |
-          #echo ${{ steps.format_version.outputs.ll_version }} > ${{ env.LL_VER }}
           echo ${{ env.LL_VER }} > .version
+      
+      - name: var
+        id: fin_ver
+        run: |
+          "ll_version=$(cat .version)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
       - name: 🧰 Install LeviLamina
         working-directory: ll
         run: |
-          lip.exe install -y github.com/LiteLDev/LeviLamina@$(cat ..\.version)
+          lip.exe install -y github.com/LiteLDev/LeviLamina@${{ steps.fin_ver.outputs.ll_version }}
         
       - name: ⚙️ Install LSE
         if: ${{ env.ENABLE_LSE == 'true' }}
@@ -130,16 +134,16 @@ jobs:
 
       - name: 📦 Pack Files
         run: |
-          7z a ll_$(cat .version)-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }} .\ll\
+          7z a ll_${{ steps.fin_ver.outputs.ll_version }}-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }} .\ll\
     
       - name: 🎉 Upload Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ll_$(cat .version)-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }}
-          name: LeviLamina Packed - $(cat .version)
-          tag_name: $(cat .version)
+          files: ll_${{ steps.fin_ver.outputs.ll_version }}-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }}
+          name: LeviLamina Packed - ${{ steps.fin_ver.outputs.ll_version }}
+          tag_name: ${{ steps.fin_ver.outputs.ll_version }}
           body: |
-            LeviLamina version: $(cat .version)
+            LeviLamina version: ${{ steps.fin_ver.outputs.ll_version }}
             BDS core needed version: ${{ steps.get_bds_core_version.outputs.bds_core_version }}
             Include LSE: ${{ env.ENABLE_LSE }}
             Include Runtime: ${{ env.ENABLE_RUNTIME }}
