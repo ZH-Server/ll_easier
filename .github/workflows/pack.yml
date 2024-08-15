@@ -107,9 +107,11 @@ jobs:
     steps:
 
     - name: Download Artifact
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
+        repository: FTS427/ll_easier
         name: ll_packed
+
     - name: Unzip Artifact
       run: |
         sudo apt install unzip tree
@@ -139,3 +141,8 @@ jobs:
           Use user_scripts.bat: ${{ github.event.inputs.SCRIPTS }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Remove Artifact
+      uses: geekyeggo/delete-artifact@v2
+      with:
+        name: ll_packed
