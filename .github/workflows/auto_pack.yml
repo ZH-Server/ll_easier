@@ -59,7 +59,7 @@ jobs:
           Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/latest/download/lip-windows-amd64.zip -Outfile .\scripts\lip.zip
           Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile .\scripts\7z_installer.exe
           "$env:GITHUB_WORKSPACE\scripts" | Out-File -FilePath $env:GITHUB_PATH -Append
-          7z_installer.exe
+          .\scripts\7z_installer.exe
           unzip .\scripts\lip.zip -d .\scripts\
 
       - name: 🧐 Get Latest LeviLamina Version
