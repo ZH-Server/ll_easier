@@ -56,14 +56,13 @@ jobs:
         run: |
           mkdir ll
           mv .\LICENSE .\ll\LL_Easier_LICENSE
-          cd .\scripts
-          Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/latest/download/lip-windows-amd64.zip -Outfile .\lip.zip
-          Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile .\7z_installer.exe
-          .\7z_installer.exe
-          unzip lip.zip
+          Invoke-WebRequest -Uri https://github.com/lippkg/lip/releases/latest/download/lip-windows-amd64.zip -Outfile .\scripts\lip.zip
+          Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile .\scripts\7z_installer.exe
           "$env:GITHUB_WORKSPACE\scripts" | Out-File -FilePath $env:GITHUB_PATH -Append
-      
-      - name: Get Latest LL Version
+          7z_installer.exe
+          unzip .\scripts\lip.zip -d .\scripts\
+
+      - name: 🧐 Get Latest LeviLamina Version
         if: ${{ env.LL_VER == 'latest' }}
         id: latest_version
         uses: pozetroninc/github-action-get-latest-release@master
@@ -71,27 +70,25 @@ jobs:
           owner: LiteLDev
           repo: LeviLamina
  
-      - name: Format version
+      - name: 📐 Format The Version Geted
         if: ${{ env.LL_VER == 'latest' }}
-        id: format_version
         run: | 
-          #"ll_version=$(echo ${{ steps.latest_version.outputs.release }} | cut -c 2-)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
           echo $(echo ${{ steps.latest_version.outputs.release }} | cut -c 2-) > .version
       
-      - name: custom version value
+      - name: 📏 Format The Custom Version
         if: ${{ env.LL_VER != 'latest' }}
         run: |
           echo ${{ env.LL_VER }} > .version
       
-      - name: var
-        id: fin_ver
+      - name: 📝 Put Version Value In Var
+        id: formated_ver
         run: |
           "ll_version=$(cat .version)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
       - name: 🧰 Install LeviLamina
         working-directory: ll
         run: |
-          lip.exe install -y github.com/LiteLDev/LeviLamina@${{ steps.fin_ver.outputs.ll_version }}
+          lip.exe install -y github.com/LiteLDev/LeviLamina@${{ steps.formated_ver.outputs.ll_version }}
         
       - name: ⚙️ Install LSE
         if: ${{ env.ENABLE_LSE == 'true' }}
@@ -119,7 +116,6 @@ jobs:
         run: |
           $file = Get-ChildItem -Path .\.cache\bdsdown\ -File | Select-Object -First 1
           "bds_core_version=$(echo $file.Name)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
-          Remove-Item -Path $file.FullName
           rm .\behavior_packs -Force -Recurse
           rm .\definitions -Force -Recurse
           rm .\resource_packs -Force -Recurse
@@ -134,16 +130,16 @@ jobs:
 
       - name: 📦 Pack Files
         run: |
-          7z a ll_${{ steps.fin_ver.outputs.ll_version }}-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }} .\ll\
+          7z a ll_${{ steps.formated_ver.outputs.ll_version }}-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }} .\ll\
     
       - name: 🎉 Upload Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ll_${{ steps.fin_ver.outputs.ll_version }}-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }}
-          name: LeviLamina Packed - ${{ steps.fin_ver.outputs.ll_version }}
-          tag_name: ${{ steps.fin_ver.outputs.ll_version }}
+          files: ll_${{ steps.formated_ver.outputs.ll_version }}-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }}
+          name: LeviLamina Packed - ${{ steps.formated_ver.outputs.ll_version }} (auto)
+          tag_name: auto-${{ steps.formated_ver.outputs.ll_version }}
           body: |
-            LeviLamina version: ${{ steps.fin_ver.outputs.ll_version }}
+            LeviLamina version: ${{ steps.formated_ver.outputs.ll_version }}
             BDS core needed version: ${{ steps.get_bds_core_version.outputs.bds_core_version }}
             Include LSE: ${{ env.ENABLE_LSE }}
             Include Runtime: ${{ env.ENABLE_RUNTIME }}
