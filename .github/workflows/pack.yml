@@ -37,11 +37,10 @@ jobs:
       run: |
         mkdir ll
         mv .\LICENSE .\ll\LL_Easier_LICENSE
-        cd .\scripts
-        Invoke-WebRequest -Uri https://github.com/futrime/lip/releases/latest/download/lip-windows-amd64.zip -Outfile .\lip.zip
-        Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile .\7z_installer.exe
-        .\7z_installer.exe
-        unzip lip.zip
+        Invoke-WebRequest -Uri https://github.com/futrime/lip/releases/latest/download/lip-windows-amd64.zip -Outfile .\scripts\lip.zip
+        Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile .\scripts\7z_installer.exe
+        .\scripts\7z_installer.exe
+        unzip .\scripts\lip.zip -d .\scripts\
         "$env:GITHUB_WORKSPACE\scripts" | Out-File -FilePath $env:GITHUB_PATH -Append
 
     - name: 🧰 Install LeviLamina
@@ -69,13 +68,14 @@ jobs:
       run: |
         user_scripts.ps1
 
-    - name: 📂 Remove BDS
+    - name: 📂 Remove BDS & Get BDS Version
       id: get_bds_core_version
       working-directory: ll
       run: |
-        $file = Get-ChildItem -Path .\.cache\bdsdown\ -File | Select-Object -First 1
-        "bds_core_version=$(echo $file.Name)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
-        Remove-Item -Path $file.FullName
+        #$file = Get-ChildItem -Path .\.cache\bdsdown\ -File | Select-Object -First 1
+        #"bds_core_version=$(echo $file.Name)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+        #Remove-Item -Path $file.FullName
+        "bds_core_version=$(python ..\scripts\get_bds_version.py)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
         rm .\behavior_packs -Force -Recurse
         rm .\definitions -Force -Recurse
         rm .\resource_packs -Force -Recurse
