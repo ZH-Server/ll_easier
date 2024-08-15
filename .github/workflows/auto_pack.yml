@@ -1,8 +1,11 @@
 name: Auto Pack LeviLamina
 
 on:
+  workflow_dispatch:
+  push:
+    branches: ["auto"]
   schedule:
-    - cron: '0 16 * * *' 
+    - cron: '0 16 * * *'
   
 jobs:
   Read-configuration:
