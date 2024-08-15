@@ -69,15 +69,21 @@ jobs:
       run: |
         # alias lip.exe install -y -> lipin
         user_scripts.ps1
+
+    - name: Get BDS core version
+      id: get_version
+      uses: FTS427/get_bds_version@main
+      with:
+        dotlip_dir: 'll/.lip'
     
-    - name: 📂 Get BDS Core Version & Remove BDS
+    - name: 📂 Remove BDS
       id: get_bds_core_version
       working-directory: ll
       run: |
         #$file = Get-ChildItem -Path .\.cache\bdsdown\ -File | Select-Object -First 1
         #"bds_core_version=$(echo $file.Name)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
         #Remove-Item -Path $file.FullName
-        "bds_core_version=$(echo $get_version.ps1)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+        #"bds_core_version=$(echo $get_version.ps1)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
         rm .\behavior_packs -Force -Recurse
         rm .\definitions -Force -Recurse
         rm .\resource_packs -Force -Recurse
@@ -92,17 +98,17 @@ jobs:
     
     - name: 📦 Pack Files
       run: |
-        7z a ll_${{ github.event.inputs.LL_VER  }}-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }}.zip .\ll\
+        7z a ll_${{ github.event.inputs.LL_VER  }}-bds_${{ steps.get_bds_version.outputs.version }}.zip .\ll\
     
     - name: 🎉 Upload Release
       uses: softprops/action-gh-release@v1
       with:
-        files: ll_${{ github.event.inputs.LL_VER  }}-bds_${{ steps.get_bds_core_version.outputs.bds_core_version }}.zip
+        files: ll_${{ github.event.inputs.LL_VER  }}-bds_${{ steps.get_bds_version.outputs.version }}.zip
         name: LeviLamina Packed - ${{ github.event.inputs.LL_VER  }}
         tag_name: ${{ github.event.inputs.LL_VER  }}
         body: |
           LeviLamina version: ${{ github.event.inputs.LL_VER  }}
-          BDS core needed version: ${{ steps.get_bds_core_version.outputs.bds_core_version }}
+          BDS core needed version: ${{ steps.get_bds_version.outputs.version }}
           Include LSE: ${{ github.event.inputs.LSE }}
           Include Runtime: ${{ github.event.inputs.RUNTIME }}
           Use user_scripts.bat: ${{ github.event.inputs.SCRIPTS }}
