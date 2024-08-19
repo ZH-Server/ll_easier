@@ -40,6 +40,7 @@ jobs:
         Invoke-WebRequest -Uri https://github.com/futrime/lip/releases/latest/download/lip-windows-amd64.zip -Outfile .\scripts\lip.zip
         Invoke-WebRequest -Uri https://www.7-zip.org/a/7z2401-x64.exe -Outfile .\scripts\7z_installer.exe
         .\scripts\7z_installer.exe
+        Invoke-WebRequest -Uri https://github.com/jqlang/jq/releases/latest/download/jq-windows-amd64.exe -Outfile .\scripts\jq.exe
         unzip .\scripts\lip.zip -d .\scripts\
         "$env:GITHUB_WORKSPACE\scripts" | Out-File -FilePath $env:GITHUB_PATH -Append
 
@@ -72,7 +73,7 @@ jobs:
       id: get_bds_core_version
       working-directory: ll
       run: |
-        "bds_core_version=$(python ..\scripts\get_bds_version.py)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+        "bds_core_version=$(jq -r ".version" ".\.lip\metadata\github.com%2FLiteLDev%2Fbds.json")" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
         rm .\behavior_packs -Force -Recurse
         rm .\definitions -Force -Recurse
         rm .\resource_packs -Force -Recurse
