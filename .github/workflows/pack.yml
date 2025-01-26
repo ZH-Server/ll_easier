@@ -52,9 +52,9 @@ jobs:
       working-directory: ll
       if: github.event.inputs.LSE == 'true'
       run: |
-        lip.exe install -y github.com/LiteLDev/LegacyScriptEngine
-        lip.exe install -y gitea.litebds.com/LiteLDev/legacy-script-engine-nodejs
         lip.exe install -y gitea.litebds.com/LiteLDev/legacy-script-engine-python
+        lip.exe install -y gitea.litebds.com/LiteLDev/legacy-script-engine-lua
+        lip.exe install -y gitea.litebds.com/LiteLDev/legacy-script-engine-quickjs
     
     - name: 🔧 Install Runtime
       working-directory: ll
